@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+        <meta name="description" content="Personal website and resume for Luke Newman, software engineer seeking a job in Sydney Australia">
+        <meta name="keywords" content="Resume,Blog,Software Engineer">
+        <meta name="author" content="Luke Newman">
+
+        <script src="{{ url_for('static', filename='vendor/jquery/jquery.min.js') }}"></script>
+        <script src="{{ url_for('static', filename='vendor/sketch/sketch.min.js')     }}"></script>
+        <script src="{{ url_for('static', filename='vendor/bootstrap/js/bootstrap.min.js')}}"></script>
+        <script src="{{ url_for('static', filename='vendor/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
+
+        <link rel= "stylesheet" type= "text/css" href= "{{ url_for('static',filename='vendor/font-awesome/css/font-awesome.min.css') }}">
+        <link rel="stylesheet" href="{{ url_for('static', filename='vendor/bootstrap/css/bootstrap.min.css')}}">
+        <!-- Custom theme -->
+        <link rel="stylesheet" href="{{ url_for('static', filename='css/custom.css')}}" >
+         <!-- Custom fonts -->
+        <link href="https://fonts.googleapis.com/css?family=Monserat|Julius+Sans+One|Open+Sans|Source+Code+Pro:200" rel="stylesheet">
+    </head>
+
+    <body id="page-top">
+         <!-- Navigation -->
+        <nav class="navbar navbar-expand-lg navbar-light fixed-top" id="mainNav">
+            <div class="container">
+                <a class="navbar-brand js-scroll-trigger" href="{{ url_for('home') }}">Luke Newman</a>
+                <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
+                    <i class="fa fa-bars"></i>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarResponsive">
+                    <ul class="navbar-nav ml-auto">
+                        <li class="nav-item">
+                            <a class="nav-link js-scroll-trigger" href="#contact">Contact</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+
+         <!-- Page Header -->
+        <header class="masthead" style="background-image: url('/static/img/numbers_2.jpg')">
+          <div class="overlay"></div>
+          <div class="container">
+            <div class="row">
+              <div class="col-lg-8 col-md-10 mx-auto">
+                <div class="post-heading">
+                  <h1>Digit Classifier</h1>
+                  <h2 class="subheading">A Random Forest Classifier made through the integration of
+                      Scikit-learn and Flask.
+                  </h2>
+                  <span class="meta">Posted on January 21, 2018</span>
+                    <br>
+                    <a href="#about" class="btn btn-circle js-scroll-trigger">
+                        <i class="fa fa-angle-double-down animated"></i>
+                    </a>
+                </div>
+              </div>
+            </div>
+          </div>
+        </header>
+
+        <div class="space_10"></div>
+        <section id="about" class="content-section text-center">
+         <div class="container" style="text-align: center; display: inline-block; margin: auto; padding: 0;">
+            <p>Draw a single digit in the box below</p>
+                <canvas id="digits_sketch" style="border: 1px solid black; cursor: crosshair;" width="336" height="336"></canvas>
+                <br/>
+                <br/>
+                <button class="btn btn-primary" id="recognizeBtn">Recognize</button>
+                <button class="btn btn-primary" id="clearBtn">Clear</button>
+
+                <br/>
+                <br/>
+             <div class="space_10">
+                <p id="digit"class="text-center h2"></p>
+             </div>
+                <script>
+                  $(function() {
+                    var sketch = $('#digits_sketch').sketch();
+                  });
+
+                  $('#recognizeBtn').on('click', function (e) {
+                    var canvas = document.getElementById('digits_sketch');
+                    $.ajax({
+                      type: "POST",
+                      url: '/recognizer',
+                      data: JSON.stringify({'image':canvas.toDataURL()}),
+                      contentType: "application/json; charset=utf-8",
+                    }).done(function(data) {
+                        var text = $('#digit').text();
+                        $('#digit').text('Recognized digit: '+data)
+                    });
+
+                   });
+
+                  $('#clearBtn').on('click', function (e) {
+                    var canvas = document.getElementById('digits_sketch');
+                    var context = canvas.getContext('2d');
+                    context.clearRect(0, 0, canvas.width, canvas.height);
+                    $('#digits_sketch').sketch('actions',[]);
+                    $('#digit').text('');
+
+                   });
+
+                </script>
+            </div>
+        </section>
+
+        <section class="content-section">
+            <div class="container col-lg-8 col-md-10 mx-auto" style="padding-left: 5%; padding-right: 5%; text-align: justify">
+                <p>
+                    The above classifier was trained using the MNIST database which contains 60,000 training examples of
+                    28 x 28px handwritten digits, and a test set of 10,000.
+                </p>
+                <h5>Forest?</h5>
+                <p>
+                    Because the main component is a decision tree
+                </p>
+                <h5>Random?</h5>
+                <p>
+                    Each tree is trained on a random subset of the data
+                </p>
+                <p>
+                    Each individual tree gives its own prediction, and these predictions are combined to come up
+                    with a final prediction via averaging. This makes this model more robust, as individual
+                    trees with outliers in their subsets will be rejected by a majority vote.
+                </p>
+
+                <!-- Getting the data -->
+                <div class="space_5"></div>
+                <h4>Getting the Data</h4>
+                <p>Import the usual suspects and some bits and pieces to extract the data and serialize the model later</p>
+                <pre>
+                    import matplotlib.pyplot as plt
+                    import os
+                    import numpy as np
+                    import pandas as pd
+
+                    from sklearn.ensemble import RandomForestClassifier
+                    from sklearn.model_selection import StratifiedShuffleSplit
+                    from sklearn.externals import joblib
+                </pre>
+
+                <p>Retrieve the data. If wget does not work you can download the files manually</p>
+                <pre>
+                    os.system('wget http://yann.lecun.com/exdb/mnist/train-images-idx3-ubyte.gz')
+                    os.system('wget http://yann.lecun.com/exdb/mnist/train-labels-idx1-ubyte.gz')
+                    os.system('wget http://yann.lecun.com/exdb/mnist/t10k-images-idx3-ubyte.gz')
+                    os.system('wget http://yann.lecun.com/exdb/mnist/t10k-labels-idx1-ubyte.gz')
+                    os.system('gunzip *.gz')
+                </pre>
+
+                <!-- parsing the data -->
+                <div class="space_5"></div>
+                <h4>Parsing the Data</h4>
+                <p>
+                    Open the training images and labels,  and store them in a numpy array
+
+                    The images were flattened to become a vector of size 784 and of type uint8
+                    (1 byte per pixel for black and white). which reshaped the data into a 60,000 x 768 matrix
+                </p>
+                <pre>
+                    with open("train-images-idx3-ubyte", "rb") as f:
+                    X = np.frombuffer(f.read(), dtype=np.uint8, offset=16).copy()
+                    X = X.reshape((60000, 28*28))
+
+                    with open("train-labels-idx1-ubyte", "rb") as f:
+                    y = np.frombuffer(f.read(), dtype=np.uint8, offset=8)
+                </pre>
+                <p>
+                    Same goes for the test data
+                </p>
+                <pre>
+                    with open("t10k-images-idx3-ubyte", "rb") as f:
+                    X_test = np.frombuffer(f.read(), dtype=np.uint8, offset=16).copy()
+                    X_test = X_test.reshape((10000, 28*28))
+
+                    with open("t10k-labels-idx1-ubyte", "rb") as f:
+                    y_test = np.frombuffer(f.read(), dtype=np.uint8, offset=8)
+                </pre>
+
+                <!-- Train/Test Split -->
+                <div class="space_5"></div>
+                <h4>Training the classifier</h4>
+                <p>
+                    Note that the with this dataset the training and test data has already been split for us.
+                </p>
+                <p>
+                    A Scikit-learn random forest classifier object was instantiated and the model was fitted to the data.
+                </p>
+                <pre>
+                    clf = RandomForestClassifier(n_estimators=50, n_jobs=-1, random_state=0)
+                    clf.fit(X, y)
+                    print('Accuracy on the test set is', 100*sum(y_test == clf.predict(X_test))/1./y_test.shape[0], '%')
+                </pre>
+                <p>
+                    The entire data set was trained and test with a random forest of 50 trees, yielding an accuracy of
+                    96.69%. The model was then pickled/serialized using joblib and instantiated in the flask app.
+                </p>
+                <p>
+                    While 50 trees doesn't yeild the best result, the size of a classifier with more trees was too much
+                    to handle when loaded into the server's RAM. While the accuracy of the model certainly could be better,
+                    it's still acceptable for demonstration purposes.
+                </p>
+                <p>
+                    Another thing I noticed is that digit drawn with a mouse looks way different compared to a handwritten
+                    one. If the model was trained with digits drawn with a mouse I'd say it would more successful.
+                </p>
+            </div>
+        </section>
+
+        <!-- Contact  -->
+        <footer>
+            <div id="contact" class="row space_25"></div>
+            <hr>
+            <div class="container" id="foot">
+                <div class="row">
+                    <div class="col-lg-8 col-md-10 mx-auto">
+                        <ul class="list-inline text-center">
+                            <li class="list-inline-item">
+                                <a href="http://au.linkedin.com/in/luke-newman-a1b6616b">
+                  <span class="fa-stack fa-lg">
+                    <i class="fa fa-circle fa-stack-2x"></i>
+                    <i class="fa fa-linkedin fa-stack-1x fa-inverse"></i>
+                  </span>
+                                </a>
+                            </li>
+                            <li class="list-inline-item">
+                                <a href="http://github.com/Luke-Newman">
+                  <span class="fa-stack fa-lg">
+                    <i class="fa fa-circle fa-stack-2x"></i>
+                    <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                  </span>
+                                </a>
+                            </li>
+                            <li class="list-inline-item">
+                                <a href="mailto:lukenewman@live.com.au">
+                  <span class="fa-stack fa-lg">
+                    <i class="fa fa-circle fa-stack-2x"></i>
+                    <i class="fa fa-envelope fa-stack-1x fa-inverse"></i>
+                  </span>
+                                </a>
+                            </li>
+                        </ul>
+
+                    </div>
+                </div>
+            </div>
+            <div class="container text-center">
+                <p class="copyright text-muted" id="copyright">Copyright &copy; Luke Newman 2018</p>
+            </div>
+        </footer>
+    </body>
+    <!-- Bootstrap core JavaScript -->
+
+
+    <!-- Plugin JavaScript -->
+    <script src="{{ url_for('static', filename='vendor/jquery-easing/jquery.easing.js') }}"></script>
+
+    <!-- Custom JavaScript -->
+    <script src="{{ url_for('static', filename='js/scroller.js') }}"></script>
+</html>
