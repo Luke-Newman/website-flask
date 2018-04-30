@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+        <meta name="description" content="Personal website and resume for Luke Newman, software engineer seeking a job in Sydney Australia">
+        <meta name="keywords" content="Resume,Blog,Software Engineer">
+        <meta name="author" content="Luke Newman">
+
+        <title>Luke Newman</title>
+        <!-- Bootstrap core CSS -->
+        <link rel= "stylesheet" type= "text/css" href= "{{ url_for('static',filename='vendor/bootstrap/css/bootstrap.min.css') }}">
+        <link rel= "stylesheet" type= "text/css" href= "{{ url_for('static',filename='vendor/font-awesome/css/font-awesome.min.css') }}">
+        <!-- Custom fonts -->
+        <link href="https://fonts.googleapis.com/css?family=Monserat|Julius+Sans+One|Open+Sans|Source+Code+Pro:200" rel="stylesheet">
+        <!-- Custom styles -->
+        <link rel= "stylesheet" type= "text/css" href= "{{ url_for('static',filename='css/custom.css') }}">
+    </head>
+
+    <body id="page-top">
+
+        <!-- Navigation -->
+        <nav class="navbar navbar-expand-lg navbar-light fixed-top" id="mainNav">
+            <div class="container">
+                <a class="navbar-brand js-scroll-trigger" href="#page-top">Luke Newman</a>
+                <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
+                    <i class="fa fa-bars"></i>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarResponsive">
+                    <ul class="navbar-nav ml-auto">
+                        <li class="nav-item active">
+                            <a class="nav-link js-scroll-trigger" href="#about">About
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link js-scroll-trigger" href="#content">Posts</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link js-scroll-trigger" href="#contact">Contact</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+
+        <!-- Page Header -->
+        <header class="masthead" style="">
+            <div class="overlay">
+                <canvas id="canvas"></canvas>
+            </div>
+            <div class="container" id="intro-body">
+                <div class="row">
+                    <div class="col-lg-8 col-md-10 mx-auto" >
+                        <div class="site-heading">
+                            <h1 id="intro-title">Luke Newman</h1>
+                            <span class="subheading">Web Systems >> AI;</span>
+                            <br>
+                            <a href="#about" class="btn btn-circle js-scroll-trigger">
+                                <i class="fa fa-angle-double-down animated"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <!-- About Section -->
+        <section id="about" class="content-section">
+            <div id="about_overlay">
+            <div class="row space_10"></div>
+            <div class="row" style="color: black; padding-left: 5%; padding-right: 5%; text-align: justify">
+                <div class="container col-lg-8 col-md-10 mx-auto" style="">
+                    <div class="strapping_young_lad" style="background-image: url('/static/img/me.jpg')" ></div>
+                    <div class="row space_10"></div>
+                    <p>
+                        I'm a developer with an active interest in artificial intelligence, and its
+                        implementation in web systems.
+                    </p>
+                    <p>
+                        My main projects are this website, and a Forex algorithmic trading system.
+                        I also like to build AI algorithms in C++ and Javascript, as well as make flask
+                        apps and python automation scripts. When I'm not embedding my ideas into code I like get
+                        out on my bike (of the combustion engine variety).
+                    </p>
+                    <p>
+                        I'm currently in my final semester of my computer science degree with one subject remaining, and
+                        I can say with confidence that I'm ready to get my hands dirty with some real projects.
+                        So if you have any work you think I'd dig, and you like the cut of my jib I would love to hear from you.
+                    </p>
+                </div>
+            </div>
+            </div>
+        </section>
+
+        <!-- Main Content -->
+        <section id="content" class="content-section text-center" style="clear: both">
+        <div class="row space_10"></div>
+        <hr>
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8 col-md-10 mx-auto">
+                    <div class="post-preview">
+                        <a href="{{ url_for('digits_class') }}">
+                            <h1 class="post-title">
+                                Digit Classification with Random Forests
+                            </h1>
+                            <p class="post-subtitle">
+                                Image classification with Scikit-learn and flask
+                            </p>
+                        </a>
+                        <p class="post-meta">Posted on January 21, 2018</p>
+                    </div>
+                    <hr>
+
+                    <!-- Pager -->
+                    <div class="clearfix">
+                        <a class="btn btn-primary float-right">More Soon!</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        </section>
+
+        <!-- Contact  -->
+        <footer>
+            <div id="contact" class="row space_25"></div>
+            <hr>
+            <div class="container" id="foot">
+                <div class="row">
+                    <div class="col-lg-8 col-md-10 mx-auto">
+                        <ul class="list-inline text-center">
+                            <li class="list-inline-item">
+                                <a href="http://au.linkedin.com/in/luke-newman-a1b6616b">
+                  <span class="fa-stack fa-lg">
+                    <i class="fa fa-circle fa-stack-2x"></i>
+                    <i class="fa fa-linkedin fa-stack-1x fa-inverse"></i>
+                  </span>
+                                </a>
+                            </li>
+                            <li class="list-inline-item">
+                                <a href="http://github.com/Luke-Newman">
+                  <span class="fa-stack fa-lg">
+                    <i class="fa fa-circle fa-stack-2x"></i>
+                    <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                  </span>
+                                </a>
+                            </li>
+                            <li class="list-inline-item">
+                                <a href="mailto:lukenewman@live.com.au">
+                  <span class="fa-stack fa-lg">
+                    <i class="fa fa-circle fa-stack-2x"></i>
+                    <i class="fa fa-envelope fa-stack-1x fa-inverse"></i>
+                  </span>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div class="container text-center">
+                <p class="copyright text-muted" id="copyright">Copyright &copy; Luke Newman 2018</p>
+            </div>
+        </footer>
+    </body>
+
+   <!-- Bootstrap & core JavaScript -->
+    <script src="{{ url_for('static', filename='vendor/jquery/jquery.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='vendor/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
+    <!-- Plugin JavaScript -->
+    <script src="{{ url_for('static', filename='vendor/jquery-easing/jquery.easing.js') }}"></script>
+    <!-- Custom JavaScript -->
+    <script src="{{ url_for('static', filename='js/particles.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/scroller.js') }}"></script>
+</html>
